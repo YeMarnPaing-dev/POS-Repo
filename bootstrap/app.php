@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'adminmiddleware' => AdminMiddleware::class,
         'usermiddleware' => UserMiddleware::class,
         'superAdminMiddleware'=>SuperAdminMiddleware::class,
-        'authMiddleware'=>AuthenticatedMiddleware::class
+        'authMiddleware'=>AuthenticatedMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

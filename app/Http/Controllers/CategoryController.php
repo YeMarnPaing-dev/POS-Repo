@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Notifications\ExampleNotification;
+use Illuminate\Support\Facades\Notification;
 
 class CategoryController extends Controller
 {
@@ -17,16 +20,25 @@ class CategoryController extends Controller
 
     public function create(Request $request) {
     $this->validateCategory($request);
-
-
-
         // Create a new category
         Category::create([
             'name'=>$request->categoryName
         ]);
+        $token  = env('TELEGRAM_BOT_TOKEN');
+        $chatId = env('TELEGRAM_CHAT_ID');
+
+        Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+            'chat_id'    => $chatId,
+            'text'       => "📂 New Category Created: *{$request->categoryName}*",
+            'parse_mode' => 'Markdown',
+        ]);
+
      Alert::success('Success Title', 'Category created successfully');
+
         return back();
     }
+
+
 
     //categroy validation
     private function validateCategory($request){
@@ -42,10 +54,27 @@ class CategoryController extends Controller
 
     public function delete($id) {
         // Find the category by ID
-       Category::where('id', $id)->delete();
-        // Redirect back with success message
-        Alert::success('Success Title', 'Category deleted successfully');
-        return back();
+   // 1. Find the category
+    $category = Category::findOrFail($id); // throws 404 if not found
+    $categoryName = $category->name;       // store name before delete
+
+    // 2. Delete it
+    $category->delete();
+
+    // 3. Send Telegram notification
+    $token  = env('TELEGRAM_BOT_TOKEN');
+    $chatId = env('TELEGRAM_CHAT_ID');
+
+    Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+        'chat_id'    => $chatId,
+        'text'       => "📂 Category Deleted: *{$categoryName}*",
+        'parse_mode' => 'Markdown',
+    ]);
+
+    // 4. Flash local success message
+    Alert::success('Success', 'Category deleted successfully');
+
+    return back();
     }
 
     public function edit($id){
