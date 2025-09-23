@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 
 class ProductController extends Controller
 {
@@ -25,7 +26,25 @@ class ProductController extends Controller
     $request->file('image')->move(public_path()."/productImage/", $fileName);
     $data['image'] = $fileName;
   }
+
     Product::create($data);
+
+        $token  = env('TELEGRAM_BOT_TOKEN');
+        $chatId = env('TELEGRAM_CHAT_ID');
+
+        $admin = auth()->user()->name;
+
+        $text = "📂 New Product Created!\n"
+      . "🔖 Name: *{$request->name}*\n"
+      . "💰 Price: {$request->price}\n"
+      . "📝 Description: {$request->description}\n"
+      ."Admin Name:{$admin}";
+
+        Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
+            'chat_id'    => $chatId,
+            'text'       => $text,
+            'parse_mode' => 'Markdown',
+        ]);
 
     return to_route('product#createPage')->with(['createSuccess' => 'Product created successfully!']);
     }
