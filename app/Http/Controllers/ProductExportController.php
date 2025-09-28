@@ -12,5 +12,6 @@ class ProductExportController extends Controller
     {
         $fileName = 'products_' . now()->format('Y_m_d_His') . '.xlsx';
         return Excel::download(new ProductExport, $fileName);
+        // return Excel::download(new UsersExport, 'users.csv', \Maatwebsite\Excel\Excel::CSV);
     }
 }
