@@ -16,6 +16,8 @@ Route::get('dashboard',[AdminController::class,'dashboard'])->name('admin#dashbo
 
 Route::get('product/export', [ProductExportController::class, 'export'])->name('product.export');
 
+Route::get('product/export-pdf', [ProductController::class, 'exportPdf'])->name('products.export.pdf');
+
 Route::group(['prefix'=>'category'],function(){
     Route::get('list',[CategoryController::class,'list'])->name('category#list');
     Route::post('create',[CategoryController::class,'create'])->name('category#create');

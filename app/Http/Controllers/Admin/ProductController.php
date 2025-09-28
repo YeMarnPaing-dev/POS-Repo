@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 
@@ -161,5 +162,25 @@ public function detail($id){
 }
 
 
+   public function exportPdf()
+    {
+        $products = Product::select(
+                'products.id',
+                'products.name',
+                'products.price',
+                'products.description',
+                'categories.name as category_name',
+                'products.stock',
+                'products.created_at'
+            )
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.id')
+            ->get();
+
+        $pdf = Pdf::loadView('admin.product.list', compact('products'))
+                  ->setPaper('a4', 'landscape');
+
+        $fileName = 'products_' . now()->format('Y_m_d_His') . '.pdf';
+        return $pdf->download($fileName);
+    }
 
 }
