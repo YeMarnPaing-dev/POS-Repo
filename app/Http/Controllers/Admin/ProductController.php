@@ -100,7 +100,7 @@ private function getProductData(Request $request)
             $query->whereAny(['products.name','products.price','categories.name'], 'like', '%'.request('searchKey').'%');
         })
         ->orderBy('products.created_at','desc')
-        ->get();
+        ->paginate('10');
         return view('admin.product.list',compact('products'));
     }
 
@@ -129,21 +129,29 @@ $this->validateProductData($request,'update');
 $data = $this->getProductData($request);
 // dd($data);
 
- if($request->hasfile('image')){
-         $oldImage= $request->productImage; //old image name
-           if(file_exists(\public_path('productImage/'.$oldImage))){ //delete if old image exist
-            unlink(public_path('productImage/'.$oldImage));
+if ($request->hasFile('image')) {
+    $product = Product::findOrFail($request->productId);
 
-                 $fileName=uniqid() . $request->file('image')->getClientOriginalName();
-    $request->file('image')->move(public_path().'/productImage/', $fileName);
-    $data['image']  = $fileName;
-    }else{
-        $data['image']=$request->productImage;
+    // get old image from DB
+    $oldImage = $product->image;
+
+    // delete old image if exists
+    if ($oldImage && file_exists(public_path('productImage/'.$oldImage))) {
+        unlink(public_path('productImage/'.$oldImage));
     }
 
+    // upload new image
+    $fileName = uniqid() . '_' . $request->file('image')->getClientOriginalName();
+    $request->file('image')->move(public_path('productImage'), $fileName);
+
+    $data['image'] = $fileName;
+} else {
+    // keep old image
+    $data['image'] = $request->productImage;
 }
 
-Product::where('id',$request->productId)->update($data);
+Product::where('id', $request->productId)->update($data);
+
 
 // Product:: find($id)->update($data);
 return to_route('product#list')->with(['updateSuccess' => 'Product updated successfully!']);
