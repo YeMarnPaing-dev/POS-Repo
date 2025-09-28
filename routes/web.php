@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialLoginController;
 
@@ -28,5 +29,5 @@ Route::get('/auth/{provider}/callback',[SocialLoginController::class,'callback']
     ->name('socialCallback');
 
 
-
+Route::get('/register', [AuthController::class, 'register']);
 
