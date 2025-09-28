@@ -18,6 +18,8 @@ Route::get('product/export', [ProductExportController::class, 'export'])->name('
 
 Route::get('product/export-pdf', [ProductController::class, 'exportPdf'])->name('products.export.pdf');
 
+Route::post('product/import', [ProductController::class, 'import'])->name('products.import');
+
 Route::group(['prefix'=>'category'],function(){
     Route::get('list',[CategoryController::class,'list'])->name('category#list');
     Route::post('create',[CategoryController::class,'create'])->name('category#create');

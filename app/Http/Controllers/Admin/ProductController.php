@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Imports\ProductsImport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProductController extends Controller
 {
@@ -181,6 +184,20 @@ public function detail($id){
 
         $fileName = 'products_' . now()->format('Y_m_d_His') . '.pdf';
         return $pdf->download($fileName);
+    }
+
+
+     public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
+        Excel::import(new ProductsImport, $request->file('file'));
+
+        Alert::success('Success Title', 'Products created successfully');
+
+        return back();
     }
 
 }
