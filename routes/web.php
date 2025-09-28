@@ -28,3 +28,5 @@ Route::get('/auth/{provider}/callback',[SocialLoginController::class,'callback']
     ->name('socialCallback');
 
 
+
+

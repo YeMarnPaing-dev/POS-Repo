@@ -5,7 +5,4 @@ use App\Http\Controllers\AuthController;
 
 
 
-Route::namespace('Api')->group(function(){
-    Route::get('register',[AuthController::class,'register']);
-
-});
+Route::get('register', [AuthController::class, 'register'])->name('api.register');
