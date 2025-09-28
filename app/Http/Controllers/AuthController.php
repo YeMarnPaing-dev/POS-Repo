@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function register(){
-          return response()->json([
-            'message' => 'User registered successfully',
-
+    public function register() {
+        return response()->json([
+            'message' => 'User registered successfully'
         ]);
     }
 }
