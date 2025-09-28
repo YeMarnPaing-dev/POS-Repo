@@ -9,6 +9,7 @@
                             <a href="{{route('product#list')}}" class=" btn btn-outline-primary  rounded shadow-sm">All Products</a>
                             <a href="{{route('product#list','lowAmt')}}" class=" btn btn-outline-danger  rounded shadow-sm">Low Amount Product List</a>
                             <a href="{{route('product#list','highAmt')}}" class=" btn btn-outline-primary  rounded shadow-sm">High Amount Products</a>
+                            <a href="{{route('product.export')}}" class="mt-2 btn btn-outline-success  rounded shadow-sm">Download Excel</a>
                         </div>
                         <div class="">
                             <form action="{{route('product#list')}}" method="get">

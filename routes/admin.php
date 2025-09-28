@@ -8,10 +8,13 @@ use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\ProductExportController;
 
 
 Route::group(['prefix'=>'admin','middleware'=>'adminmiddleware'], function(){
 Route::get('dashboard',[AdminController::class,'dashboard'])->name('admin#dashboard');
+
+Route::get('product/export', [ProductExportController::class, 'export'])->name('product.export');
 
 Route::group(['prefix'=>'category'],function(){
     Route::get('list',[CategoryController::class,'list'])->name('category#list');
